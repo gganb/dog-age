@@ -6,7 +6,6 @@ import com.github.ggab.puppyage.domain.age.entity.Age;
 import com.github.ggab.puppyage.domain.age.enums.DogSize;
 import com.github.ggab.puppyage.domain.age.repository.AgeRepository;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.Period;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +23,7 @@ public class AgeService {
     public AgeResponseDto circulateAge(AgeRequestDto requestDto) {
 
         Integer dogAge = 0;
-        LocalDateTime dogBirth = requestDto.getBirth();
+        LocalDate dogBirth = requestDto.getBirth();
         LocalDate today = LocalDate.now();
         DogSize dogSize = requestDto.getDogSize();
         Integer inputAge = requestDto.getAge();
@@ -32,7 +31,7 @@ public class AgeService {
         if (dogBirth != null) {
 
             // 생일 기준 강아지 나이 계산
-            if (dogBirth.toLocalDate().isAfter(today)) {
+            if (dogBirth.isAfter(today)) {
                 throw new IllegalArgumentException("생일이 현재 날짜보다 이후일 수 없습니다.");
             }
 
@@ -58,8 +57,7 @@ public class AgeService {
     }
 
     // 강아지 나이 계산
-    private int calculateDogAge(LocalDateTime birth, LocalDate today) {
-        LocalDate date = birth.toLocalDate();
-        return Period.between(date, today).getYears();
+    private int calculateDogAge(LocalDate birth, LocalDate today) {
+        return Period.between(birth, today).getYears();
     }
 }

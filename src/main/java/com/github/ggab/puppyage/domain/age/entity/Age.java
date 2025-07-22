@@ -8,6 +8,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -32,7 +33,7 @@ public class Age {
     @Column(nullable = false)
     private DogSize dogSize;
 
-    private LocalDateTime birth;
+    private LocalDate birth;
 
     private int dogAge;
 }
