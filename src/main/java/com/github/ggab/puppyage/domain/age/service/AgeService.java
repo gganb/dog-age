@@ -1,0 +1,65 @@
+package com.github.ggab.puppyage.domain.age.service;
+
+import com.github.ggab.puppyage.domain.age.dto.request.AgeRequestDto;
+import com.github.ggab.puppyage.domain.age.dto.response.AgeResponseDto;
+import com.github.ggab.puppyage.domain.age.entity.Age;
+import com.github.ggab.puppyage.domain.age.enums.DogSize;
+import com.github.ggab.puppyage.domain.age.repository.AgeRepository;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Period;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+@Slf4j
+@Service
+@AllArgsConstructor
+public class AgeService {
+
+    private final AgeRepository repository;
+
+    @Transactional
+    public AgeResponseDto circulateAge(AgeRequestDto requestDto) {
+
+        Integer dogAge = 0;
+        LocalDateTime dogBirth = requestDto.getBirth();
+        LocalDate today = LocalDate.now();
+        DogSize dogSize = requestDto.getDogSize();
+        Integer inputAge = requestDto.getAge();
+
+        if (dogBirth != null) {
+
+            // 생일 기준 강아지 나이 계산
+            if (dogBirth.toLocalDate().isAfter(today)) {
+                throw new IllegalArgumentException("생일이 현재 날짜보다 이후일 수 없습니다.");
+            }
+
+            dogAge = calculateDogAge(dogBirth, today);
+
+            if (inputAge != null && !dogAge.equals(inputAge)) {
+                log.warn("입력한 나이 {}와 생일로 계산한 나이 {}가 다릅니다.", inputAge, dogAge);
+            }
+        } else if (inputAge != null) {
+            dogAge = inputAge;
+        } else {
+            throw new IllegalArgumentException("생일 또는 나이 둘 중 하나는 반드시 입력해야합니다.");
+        }
+
+        // 사람 나이 계산
+        int humanAge = dogSize.calculateHumanAge(dogAge);
+
+        Age age = requestDto.toEntity(dogSize, dogBirth, requestDto.getName(), dogAge);
+
+        repository.save(age);
+
+        return AgeResponseDto.of(age, humanAge);
+    }
+
+    // 강아지 나이 계산
+    private int calculateDogAge(LocalDateTime birth, LocalDate today) {
+        LocalDate date = birth.toLocalDate();
+        return Period.between(date, today).getYears();
+    }
+}
