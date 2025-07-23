@@ -14,13 +14,21 @@ public enum DogSize {
         this.yearlyAddition = yearlyAddition;
     }
 
-    public int calculateHumanAge(int dogAge) {
-        if (dogAge == 1) {
-            return 15;
+    public int calculateHumanAge(int monthAge) {
+        if(monthAge < 0){
+            throw new IllegalArgumentException("월령은 음수일 수 없습니다.");
         }
-        if (dogAge == 2) {
-            return 24;
-        }
-        return 24 + (dogAge - 2) * yearlyAddition;
+        if (monthAge <= 1) return 1;
+        if (monthAge <= 2) return 3;
+        if (monthAge <= 3) return 5;
+        if (monthAge <= 6) return 10;
+        if (monthAge <= 9) return 14;
+        if (monthAge <= 12) return 15;
+        if (monthAge <= 18) return 20;
+        if (monthAge <= 24) return 24;
+
+        int additional = (monthAge - 24) / 12;
+
+        return 24 + additional * yearlyAddition;
     }
 }

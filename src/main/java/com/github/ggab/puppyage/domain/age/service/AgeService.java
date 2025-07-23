@@ -6,7 +6,7 @@ import com.github.ggab.puppyage.domain.age.entity.Age;
 import com.github.ggab.puppyage.domain.age.enums.DogSize;
 import com.github.ggab.puppyage.domain.age.repository.AgeRepository;
 import java.time.LocalDate;
-import java.time.Period;
+import java.time.temporal.ChronoUnit;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -22,11 +22,12 @@ public class AgeService {
     @Transactional
     public AgeResponseDto circulateAge(AgeRequestDto requestDto) {
 
-        Integer dogAge = 0;
         LocalDate dogBirth = requestDto.getBirth();
         LocalDate today = LocalDate.now();
         DogSize dogSize = requestDto.getDogSize();
         Integer inputAge = requestDto.getAge();
+
+        long monthAge;
 
         if (dogBirth != null) {
 
@@ -35,19 +36,18 @@ public class AgeService {
                 throw new IllegalArgumentException("생일이 현재 날짜보다 이후일 수 없습니다.");
             }
 
-            dogAge = calculateDogAge(dogBirth, today);
+            monthAge = calculateDogAge(dogBirth, today);
 
-            if (inputAge != null && !dogAge.equals(inputAge)) {
-                log.warn("입력한 나이 {}와 생일로 계산한 나이 {}가 다릅니다.", inputAge, dogAge);
-            }
         } else if (inputAge != null) {
-            dogAge = inputAge;
+            monthAge = inputAge * 12L;
         } else {
             throw new IllegalArgumentException("생일 또는 나이 둘 중 하나는 반드시 입력해야합니다.");
         }
 
+        int dogAge = (int) (monthAge / 12);
+
         // 사람 나이 계산
-        int humanAge = dogSize.calculateHumanAge(dogAge);
+        int humanAge = dogSize.calculateHumanAge((int)monthAge);
 
         Age age = requestDto.toEntity(dogSize, dogBirth, requestDto.getName(), dogAge);
 
@@ -57,7 +57,7 @@ public class AgeService {
     }
 
     // 강아지 나이 계산
-    private int calculateDogAge(LocalDate birth, LocalDate today) {
-        return Period.between(birth, today).getYears();
+    private long calculateDogAge(LocalDate birth, LocalDate today) {
+        return ChronoUnit.MONTHS.between(birth, today);
     }
 }
