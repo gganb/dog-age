@@ -1,0 +1,10 @@
+### POST - 나이 계산
+POST localhost:8080/api/age
+Content-Type: application/json;charset=UTF-8
+
+{
+  "name": "몽이",
+  "dogSize": "SMALL",
+  "age": 10,
+  "birth": "2027-02-12"
+}
