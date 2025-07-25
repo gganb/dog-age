@@ -20,7 +20,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Age {
+public class DogAge {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

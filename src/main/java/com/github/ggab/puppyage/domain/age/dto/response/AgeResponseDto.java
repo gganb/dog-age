@@ -1,6 +1,6 @@
 package com.github.ggab.puppyage.domain.age.dto.response;
 
-import com.github.ggab.puppyage.domain.age.entity.Age;
+import com.github.ggab.puppyage.domain.age.entity.DogAge;
 import java.time.LocalDate;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,7 +16,7 @@ public class AgeResponseDto {
     // 환산 나이
     private int humanAge;
 
-    public static AgeResponseDto of(Age age, int humanAge) {
+    public static AgeResponseDto of(DogAge age, int humanAge) {
 
         return AgeResponseDto.builder()
                 .dogId(age.getId())

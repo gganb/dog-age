@@ -1,7 +1,7 @@
 package com.github.ggab.puppyage.domain.age.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.github.ggab.puppyage.domain.age.entity.Age;
+import com.github.ggab.puppyage.domain.age.entity.DogAge;
 import com.github.ggab.puppyage.domain.age.enums.DogSize;
 import java.time.LocalDate;
 import lombok.Getter;
@@ -18,8 +18,8 @@ public class AgeRequestDto {
 
     private Integer age; // 나이 (생일을 모를 경우)
 
-    public Age toEntity(DogSize dogSize, LocalDate birth, String name, int dogAge) {
-        return Age.builder()
+    public DogAge toEntity(DogSize dogSize, LocalDate birth, String name, int dogAge) {
+        return DogAge.builder()
                 .dogSize(dogSize)
                 .birth(birth)
                 .name(name)

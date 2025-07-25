@@ -2,7 +2,7 @@ package com.github.ggab.puppyage.domain.age.service;
 
 import com.github.ggab.puppyage.domain.age.dto.request.AgeRequestDto;
 import com.github.ggab.puppyage.domain.age.dto.response.AgeResponseDto;
-import com.github.ggab.puppyage.domain.age.entity.Age;
+import com.github.ggab.puppyage.domain.age.entity.DogAge;
 import com.github.ggab.puppyage.domain.age.enums.DogSize;
 import com.github.ggab.puppyage.domain.age.repository.AgeRepository;
 import java.time.LocalDate;
@@ -49,7 +49,7 @@ public class AgeService {
         // 사람 나이 계산
         int humanAge = dogSize.calculateHumanAge((int)monthAge);
 
-        Age age = requestDto.toEntity(dogSize, dogBirth, requestDto.getName(), dogAge);
+        DogAge age = requestDto.toEntity(dogSize, dogBirth, requestDto.getName(), dogAge);
 
         repository.save(age);
 
